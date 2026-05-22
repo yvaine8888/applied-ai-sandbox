@@ -18,16 +18,16 @@ def create_app() -> Flask:
 
     @app.route("/")
     def home():
-        q = (request.args.get("q") or "").strip()
-        if q:
-            needle = q.lower()
-            notes = [
-                n for n in app.notes
-                if needle in n["title"].lower() or needle in n["body"].lower()
+        query = (request.args.get("q") or "").strip()
+        if query:
+            search_term = query.lower()
+            filtered_notes = [
+                note for note in app.notes
+                if search_term in note["title"].lower() or search_term in note["body"].lower()
             ]
         else:
-            notes = app.notes
-        return render_template("home.html", notes=notes, q=q)
+            filtered_notes = app.notes
+        return render_template("home.html", notes=filtered_notes, q=query)
 
     @app.route("/notes/new", methods=["GET", "POST"])
     def new_note():
