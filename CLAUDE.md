@@ -63,6 +63,11 @@ on every push to `main` and every PR
 - When unsure, prefer reading the test file first — it tells you exactly
   what behavior is expected.
 
+## Auth
+- Use Flask-Login + werkzeug.security for password hashing.
+- Never roll a custom auth flow; never store plaintext passwords.
+- Password reset / email verification are out of scope for now.
+
 ## Working with Claude here
 
 - Always read the task file before writing code.
