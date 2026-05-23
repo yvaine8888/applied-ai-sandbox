@@ -18,15 +18,35 @@ def create_app() -> Flask:
 
     @app.route("/")
     def home():
-        return render_template("home.html", notes=app.notes)
+        query = (request.args.get("q") or "").strip()
+        if query:
+            search_term = query.lower()
+            filtered_notes = [
+                note for note in app.notes
+                if search_term in note["title"].lower() or search_term in note["body"].lower()
+            ]
+        else:
+            filtered_notes = app.notes
+        return render_template("home.html", notes=filtered_notes, q=query)
 
     @app.route("/notes/new", methods=["GET", "POST"])
     def new_note():
         if request.method == "POST":
             title = (request.form.get("title") or "").strip()
             body = (request.form.get("body") or "").strip()
-            # TASK 01 will add validation here.
-            app.notes.append({"title": title, "body": body})
+            tags_raw = request.form.get("tags") or ""
+            tags = [t.strip() for t in tags_raw.split(",") if t.strip()]
+            title_error = "Title is required" if not title else None
+            body_error = "Body is required" if not body else None
+            if title_error or body_error:
+                return render_template(
+                    "new_note.html",
+                    title=title,
+                    body=body,
+                    title_error=title_error,
+                    body_error=body_error,
+                )
+            app.notes.append({"title": title, "body": body, "tags": tags})
             return redirect(url_for("home"))
         return render_template("new_note.html")
 
