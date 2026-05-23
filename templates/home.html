@@ -21,12 +21,16 @@
 
   <a class="btn" href="{{ url_for('new_note') }}">+ New note</a>
 
-  <form class="filter-bar" method="GET" action="{{ url_for('home') }}">
-    <input type="text" name="tag" placeholder="Filter by tag…" value="{{ filter_tag or '' }}">
-    <button type="submit">Filter</button>
+  <form method="GET" action="{{ url_for('home') }}" style="margin-top: 1rem;">
+    <input type="text" name="q" value="{{ q or '' }}" placeholder="Search notes…"
+           style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 6px; width: 60%;">
+    <button type="submit" style="background: #1a2540; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 6px; cursor: pointer;">Search</button>
+    {% if q %}<a href="{{ url_for('home') }}" style="margin-left: 0.5rem; color: #555;">Clear</a>{% endif %}
   </form>
 
-  <h2 style="margin-top: 2rem;">Your notes ({{ notes|length }})</h2>
+  <h2 style="margin-top: 2rem;">
+    {% if q %}Results for "{{ q }}" ({{ notes|length }}){% else %}Your notes ({{ notes|length }}){% endif %}
+  </h2>
   {% if notes %}
     {% for note in notes %}
       <div class="note">
@@ -35,7 +39,7 @@
       </div>
     {% endfor %}
   {% else %}
-    <p>No notes yet.</p>
+    <p>{% if q %}No notes match "{{ q }}".{% else %}No notes yet.{% endif %}</p>
   {% endif %}
 </body>
 </html>
