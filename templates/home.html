@@ -10,6 +10,9 @@
     .note { border: 1px solid #ddd; border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; }
     .note h3 { margin: 0 0 0.5rem; }
     a.btn { display: inline-block; background: #1a2540; color: #fff; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; }
+    .filter-bar { display: flex; gap: 0.5rem; margin: 1.5rem 0 0.5rem; align-items: stretch; }
+    .filter-bar input { flex: 1; padding: 0.5rem 0.75rem; border: 1px solid #ccc; border-radius: 6px; font: inherit; }
+    .filter-bar button { background: #1a2540; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -17,6 +20,11 @@
   <p class="meta">A tiny note-taking app. Practice ground for the Applied AI cohort.</p>
 
   <a class="btn" href="{{ url_for('new_note') }}">+ New note</a>
+
+  <form class="filter-bar" method="GET" action="{{ url_for('home') }}">
+    <input type="text" name="tag" placeholder="Filter by tag…" value="{{ filter_tag or '' }}">
+    <button type="submit">Filter</button>
+  </form>
 
   <h2 style="margin-top: 2rem;">Your notes ({{ notes|length }})</h2>
   {% if notes %}
